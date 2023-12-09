@@ -23,6 +23,7 @@ namespace Timebox
             });
 
             services.AddSingleton<MainViewModel>();
+            services.AddSingleton<LoadingScreenViewModel>();
 
             services.AddSingleton<INavigationService, NavigationService>();
 

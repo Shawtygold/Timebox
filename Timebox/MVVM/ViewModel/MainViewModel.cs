@@ -15,6 +15,8 @@ namespace Timebox.MVVM.ViewModel
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
             MaximizeCommand = new RelayCommand(Maximize);
+
+            Navigation.NavigateTo<LoadingScreenViewModel>();
         }
 
         #region [Properties]
