@@ -14,12 +14,15 @@ namespace Timebox.MVVM.ViewModel
 
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
-            MaximizeCommand = new RelayCommand(Maximize);
+
+            NavigateToAlarmsCommand = new RelayCommand(NavigateToAlarm);       
 
             Navigation.NavigateTo<LoadingScreenViewModel>();
+            Navigation.NavigateTo<AlarmsViewModel>();                    
         }
 
         #region [Properties]
+
         public string AppTitle { get; set; }
 
 
@@ -36,18 +39,25 @@ namespace Timebox.MVVM.ViewModel
 
         public ICommand CloseCommand { get; set; }
         public ICommand MinimizeCommand { get; set; }
-        public ICommand MaximizeCommand { get; set; }
+        public ICommand NavigateToAlarmsCommand { get; set; }
 
         private void Close(object obj) => Application.Current.Shutdown();
         private void Minimize(object obj) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
-        private void Maximize(object obj)
+        private void NavigateToAlarm(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
+        //private void NavigateToClock(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
+        //private void NavigateToStopwatch(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
+        //private void NavigateToHourglass(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
+
+
+        #endregion
+
+        #region [Methods]
+
+        private async void NavigateToAlarms()
         {
-            if (Application.Current.MainWindow.WindowState == WindowState.Normal)
-                Application.Current.MainWindow.WindowState = WindowState.Maximized;
-            else
-            {
-                Application.Current.MainWindow.WindowState = WindowState.Normal;
-            }
+            Navigation.NavigateTo<LoadingScreenViewModel>();
+
+            await Task.Run(() => { });
         }
 
         #endregion

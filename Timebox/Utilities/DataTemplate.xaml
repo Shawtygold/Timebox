@@ -6,5 +6,9 @@
     <DataTemplate DataType="{x:Type vm:LoadingScreenViewModel}">
         <view:LoadingScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:AlarmsViewModel}">
+        <view:AlarmsView/>
+    </DataTemplate>
     
 </ResourceDictionary>

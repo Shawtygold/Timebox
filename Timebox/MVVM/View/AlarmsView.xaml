@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Timebox.MVVM.View.AlarmsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Timebox.MVVM.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="588" d:DesignWidth="420">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView Background="Transparent"
+                  BorderThickness="0"
+                  Margin="0,18,0,0"
+                  ItemsSource="{Binding Alarms}"
+                  SelectedItem="{Binding SelectedItem}"
+                  ItemContainerStyle="{DynamicResource Alarm}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            
+        </ListView>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,18,23">
+            <Button Style="{DynamicResource DeleteAlarmButton}" Command="{Binding DeleteAlarmCommand}" Margin="0,0,10,0"/>
+            <Button Style="{DynamicResource EditAlarmButton}" Command="{Binding EditAlarmCommand}" Margin="0,0,10,0"/>
+            <Button Style="{DynamicResource AddAlarmButton}" Command="{Binding AddAlarmCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
