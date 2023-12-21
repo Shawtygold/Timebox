@@ -14,7 +14,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         ResizeMode="NoResize"
-        Height="245"
+        Height="300"
         Width="350"
         Name="Form">
     
@@ -245,6 +245,7 @@
                         Margin="18,0,18,0"
                         VerticalAlignment="Top">
 
+                <!--Trigger Time-->
                 <StackPanel Orientation="Horizontal">
                     <ui:NumberBox Width="145"
                                   OpacityMask="#6D79FF"
@@ -265,12 +266,28 @@
                                   Maximum="59"/>
                 </StackPanel>
 
-                <!--Login-->
-                <TextBox x:Name="tbLogin" Tag="Description"
+                <!--Description-->
+                <TextBox x:Name="tbDescription" Tag="Description"
                          Text="{Binding Description}"
                          Margin="0,12,0,0" 
                          Style="{DynamicResource TextBoxStyle}"/>
 
+                <!--Image-->
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+
+                    <TextBox x:Name="tbSound" 
+                             Text="{Binding SoundSource}" 
+                             Tag="Sound"
+                             Margin="0,0,5,0"
+                             Style="{DynamicResource TextBoxStyle}"
+                             Width="273"/>
+
+                    <Button Content="..." 
+                            Height="40"
+                            Command="{Binding SetSoundCommand}"/>
+                </StackPanel>
+                
+                <!--Everyday-->
                 <CheckBox Content="Everyday" Margin="0,12,0,0" IsChecked="{Binding IsRepeat}"/>
 
             </StackPanel>

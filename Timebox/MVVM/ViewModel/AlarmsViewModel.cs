@@ -21,7 +21,7 @@ namespace Timebox.MVVM.ViewModel
             
             Alarms = Database.GetAlarms().Result;
             
-            AlarmStart();
+            AlarmHelper.AlarmStart(Alarms);
         }
 
         #region [Properties]
@@ -102,36 +102,13 @@ namespace Timebox.MVVM.ViewModel
         private void UpdateAlarms()
         {
             // останавливаю таймеры на текущих объектах будильников (чтобы не сработали когда должны сработать таймеры на новых объектах будильников)
-            AlarmStop();
+            AlarmHelper.AlarmStop(Alarms);
 
             // получаю список таймеров из базы данных (Alarms теперь содержит новые объекты будильников (new Alarm))
             Alarms = Database.GetAlarms().Result;
 
             // запускаю таймеры на будильниках, у которых IsEnabled = true
-            AlarmStart();
-        }
-        private void AlarmStart()
-        {
-            if (Alarms == null || Alarms.Count == 0)
-                return;
-
-            for (int i = 0; i < Alarms.Count; i++)
-            {
-                if (Alarms[i].IsEnabled == true)
-                {
-                    Alarms[i].StartTimer();
-                }
-            }
-        }
-        private void AlarmStop()
-        {
-            if (Alarms == null || Alarms.Count == 0)
-                return;
-
-            for (int i = 0; i < Alarms.Count; i++)
-            {
-                Alarms[i].StopTimer();
-            }
+            AlarmHelper.AlarmStart(Alarms);
         }
 
         #endregion

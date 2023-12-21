@@ -2,24 +2,33 @@
 using System.Windows.Input;
 using Timebox.Core;
 using Timebox.MVVM.Model;
+using Timebox.Services;
 
 namespace Timebox.MVVM.ViewModel.FormViewModel
 {
     class AlarmModificationViewModel : Core.ViewModel
     {
+        //ADD
         public AlarmModificationViewModel(string _action)
         {
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
             AcceptCommand = new RelayCommand(Accept);
+            SetSoundCommand = new RelayCommand(SetSound);
+
             ACTION = _action;
+
+            Hours = DateTime.Now.Hour;
+            Minutes = DateTime.Now.Minute;
         }
 
+        //EDIT
         public AlarmModificationViewModel(string _action, Alarm alarm)
         {
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
             AcceptCommand = new RelayCommand(Accept);
+            SetSoundCommand = new RelayCommand(SetSound);
 
             ACTION = _action;
 
@@ -29,6 +38,7 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             Minutes = dateTime.Minute;
             IsRepeat = alarm.IsRepeat;
             Description = alarm.Description;
+            SoundSource = alarm.SoundSource;
             IsEnabled = alarm.IsEnabled;
         }
 
@@ -60,6 +70,16 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             set { _description = value; OnPropertyChanged(); }
         }
 
+        private string _soundSource = "";
+        public string SoundSource
+        {
+            get { return _soundSource; }
+            set { _soundSource = value; OnPropertyChanged(); }
+        }
+
+        private IDialogService dialogService;
+
+
         private bool _isRepeat;
         public bool IsRepeat
         {
@@ -73,6 +93,7 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
         public ICommand CloseCommand { get; set; }
         public ICommand MinimizeCommand { get; set; }
         public ICommand AcceptCommand { get; set; }
+        public ICommand SetSoundCommand { get; set; }
 
         private void Close(object obj)
         {
@@ -88,7 +109,7 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
         {
             if(obj is Window form)
             {
-                string msg = Validator.Validate(Hours, Minutes);
+                string msg = Validator.Validate(Hours, Minutes, SoundSource);
                 if(msg == "OK")
                 {
                     string minutes = Minutes.ToString();
@@ -96,15 +117,15 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
 
                     if (ACTION == "ADD")
                     {
-                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", IsRepeat, true)))
-                            MessageBox.Show("Error! Alarm clock was not added to the database!");
+                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, true)))
+                            MessageBox.Show("Error! Alarm clock was not added to the database.");
 
                         form.Close();
                     }
                     else if(ACTION == "EDIT")
                     {
-                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", IsRepeat, IsEnabled)))
-                            MessageBox.Show("Error! Alarm clock has not been modified in the database!");
+                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, IsEnabled)))
+                            MessageBox.Show("Error! Alarm clock has not been modified in the database.");
 
                         form.Close();
                     }
@@ -112,8 +133,15 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
                 else
                 {
                     MessageBox.Show(msg);
-                    form.Close();
                 }
+            }
+        }
+        private void SetSound(object obj)
+        {
+            dialogService = new DialogService();
+            if(dialogService.OpenFileDialog() == true)
+            {
+                SoundSource = dialogService.FilePath;
             }
         }
 

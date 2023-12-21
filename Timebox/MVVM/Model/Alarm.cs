@@ -16,6 +16,13 @@ namespace Timebox.MVVM.Model
         public string Description { get; set; } = null!;
         public string TriggerTime { get; set; } = null!;
 
+        private string _soundSource;
+        public string SoundSource
+        {
+            get { return _soundSource; }
+            set { _soundSource = value; OnPropertyChanged(); }
+        }
+
         private bool _isRepeat;
         public bool IsRepeat
         {
@@ -62,18 +69,19 @@ namespace Timebox.MVVM.Model
 
         #endregion
 
-        public Alarm(string description, string triggerTime, bool isRepeat, bool isEnabled)
+        public Alarm(string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled)
         {
             CheckedCommand = new RelayCommand(Checked);
             UncheckedCommand = new RelayCommand(Uncheck);
 
             Description = description;
             TriggerTime = triggerTime;
+            SoundSource = soundSource;
             IsRepeat = isRepeat;
             IsEnabled = isEnabled;
         }
 
-        public Alarm(ulong id, string description, string triggerTime, bool isRepeat, bool isEnabled)
+        public Alarm(ulong id, string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled)
         {
             CheckedCommand = new RelayCommand(Checked);
             UncheckedCommand = new RelayCommand(Uncheck);
@@ -81,6 +89,7 @@ namespace Timebox.MVVM.Model
             Id = id;
             Description = description;
             TriggerTime = triggerTime;
+            SoundSource = soundSource;
             IsRepeat = isRepeat;
             IsEnabled = isEnabled;         
         } 
@@ -100,36 +109,31 @@ namespace Timebox.MVVM.Model
         private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             var notify = new ToastContentBuilder();
-            notify.AddText("A,dfasdfasf!");
+            notify.AddText($"{Description}");
             
             notify.Show();
 
-            SoundPlayer simpleSound = new(@"C:\Users\user\Downloads\узбек.wav");
-            simpleSound.Play();
+            try
+            {
+                SoundPlayer simpleSound = new(@$"{SoundSource}");
+                simpleSound.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Stop();
+            }
+
+            if (timer == null)
+                return;
 
             if (!timer.AutoReset)
                 Stop();          
             else RestartTimer();
         }
-
         #endregion
 
         #region [Methods]
-        internal void StartTimer()
-        {
-            timer = new(GetIntervalInSeconds());
-            timer.AutoReset = IsRepeat;
-            timer.Elapsed += Timer_Elapsed;
-            timer.Start();
-        }
-        internal void StopTimer()
-        {
-            if (timer == null)
-                return;
-
-            timer.Stop();
-            timer.Dispose();
-        }
 
         private int GetIntervalInSeconds()
         {
@@ -169,6 +173,22 @@ namespace Timebox.MVVM.Model
                 return;
 
             timer.Interval = (double)(86400)/* * 1000*/;
+        }
+
+        internal void StartTimer()
+        {
+            timer = new(GetIntervalInSeconds());
+            timer.AutoReset = IsRepeat;
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+        }
+        internal void StopTimer()
+        {
+            if (timer == null)
+                return;
+
+            timer.Stop();
+            timer.Dispose();
         }
 
         #endregion
