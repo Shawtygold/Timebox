@@ -54,7 +54,6 @@ namespace Timebox.MVVM.ViewModel
             set { _selectedItem = value; OnPropertyChanged(); }
         }
 
-
         #endregion
 
         #region [Commands]

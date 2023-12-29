@@ -189,7 +189,7 @@ namespace Timebox.MVVM.Model
 
         #region [Methods]
 
-        private int GetIntervalInSeconds()
+        private int GetIntervalInMillisecond()
         {
             DateTime triggerTime = new();
             try
@@ -201,7 +201,7 @@ namespace Timebox.MVVM.Model
             if (triggerTime < DateTime.Now)
                 triggerTime = triggerTime.AddDays(1);
 
-            return (int)Math.Round((triggerTime - DateTime.Now).TotalSeconds, 0);
+            return (int)Math.Round((triggerTime - DateTime.Now).TotalSeconds, 0) * 1000;
         }
         private async void Start()
         {
@@ -231,7 +231,7 @@ namespace Timebox.MVVM.Model
 
         internal void StartTimer()
         {
-            timer = new(GetIntervalInSeconds());
+            timer = new(GetIntervalInMillisecond());
             timer.AutoReset = IsRepeat;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
