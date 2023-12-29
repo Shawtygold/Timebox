@@ -14,7 +14,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         ResizeMode="NoResize"
-        Height="300"
+        Height="340"
         Width="350"
         Name="Form">
     
@@ -286,6 +286,9 @@
                             Height="40"
                             Command="{Binding SetSoundCommand}"/>
                 </StackPanel>
+                
+                <!--Everyday-->
+                <CheckBox Content="Remove after triggering" Margin="0,12,0,0" IsChecked="{Binding RemoveAfterTriggering}"/>
                 
                 <!--Everyday-->
                 <CheckBox Content="Everyday" Margin="0,12,0,0" IsChecked="{Binding IsRepeat}"/>

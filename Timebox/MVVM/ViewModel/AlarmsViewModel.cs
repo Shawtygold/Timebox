@@ -18,10 +18,17 @@ namespace Timebox.MVVM.ViewModel
             AddAlarmCommand = new RelayCommand(AddAlarm);
             EditAlarmCommand = new RelayCommand(EditAlarm);
             DeleteAlarmCommand = new RelayCommand(DeleteAlarm);
+            Database.DataChanged += Database_DataChanged;
             
-            Alarms = Database.GetAlarms().Result;
-            
+            Alarms = Database.GetAlarms();
+
+            // Starting alarms that have the Enabled status
             AlarmHelper.AlarmStart(Alarms);
+        }
+
+        private void Database_DataChanged()
+        {
+            UpdateAlarms();
         }
 
         #region [Properties]
@@ -55,16 +62,14 @@ namespace Timebox.MVVM.ViewModel
         public ICommand AddAlarmCommand { get; set; }  
         public ICommand EditAlarmCommand { get; set; }
         public ICommand DeleteAlarmCommand { get; set; }
+
         private void AddAlarm(object obj)
         {
             AlarmModificationForm form = new();
             AlarmModificationViewModel vm = new("ADD");
             form.DataContext = vm;
             form.ShowDialog();
-
-            UpdateAlarms();
         }
-
         private void EditAlarm(object obj)
         {
             if (SelectedItem == null)
@@ -77,10 +82,7 @@ namespace Timebox.MVVM.ViewModel
             AlarmModificationViewModel vm = new("EDIT", SelectedItem);
             form.DataContext = vm;
             form.ShowDialog();
-
-            UpdateAlarms();
         }
-
         private async void DeleteAlarm(object obj)
         {
             if (SelectedItem == null)
@@ -91,8 +93,6 @@ namespace Timebox.MVVM.ViewModel
 
             if(!await Database.RemoveAlarm(SelectedItem))
                 MessageBox.Show("Failed to delete the alarm clock from the database!");
-
-            UpdateAlarms();
         }
 
         #endregion
@@ -101,13 +101,13 @@ namespace Timebox.MVVM.ViewModel
 
         private void UpdateAlarms()
         {
-            // останавливаю таймеры на текущих объектах будильников (чтобы не сработали когда должны сработать таймеры на новых объектах будильников)
+            // Останавливаю таймеры на текущих объектах будильников, чей статус IsEnabled = true (чтобы не сработали когда должны сработать таймеры на новых объектах будильников)
             AlarmHelper.AlarmStop(Alarms);
 
-            // получаю список таймеров из базы данных (Alarms теперь содержит новые объекты будильников (new Alarm))
-            Alarms = Database.GetAlarms().Result;
+            // Получаю список таймеров из базы данных (Alarms теперь содержит новые объекты будильников (new Alarm))
+            Alarms = Database.GetAlarms();
 
-            // запускаю таймеры на будильниках, у которых IsEnabled = true
+            // Запускаю таймеры на будильниках, у которых IsEnabled = true
             AlarmHelper.AlarmStart(Alarms);
         }
 

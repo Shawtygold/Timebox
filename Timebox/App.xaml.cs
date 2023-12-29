@@ -1,8 +1,12 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Timebox.Core;
 using Timebox.MVVM.ViewModel;
 using Timebox.Services;
+using Windows.ApplicationModel.Activation;
+using Windows.Foundation.Collections;
+using Windows.UI.Notifications;
 
 namespace Timebox
 {
@@ -35,10 +39,11 @@ namespace Timebox
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            ToastNotificationManagerCompat.OnActivated += MVVM.Model.Alarm.ToastNotificationManagerCompat_OnActivated;
+
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             base.OnStartup(e);
         }
     }
-
 }

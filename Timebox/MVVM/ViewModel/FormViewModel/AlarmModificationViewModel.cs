@@ -40,14 +40,22 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             Description = alarm.Description;
             SoundSource = alarm.SoundSource;
             IsEnabled = alarm.IsEnabled;
+            RemoveAfterTriggering = alarm.RemoveAfterTriggering;
         }
 
         #region [Properties]
 
+        private static string ACTION;
         private ulong Id { get; set; }
         private bool IsEnabled { get; set; }
 
-        private static string ACTION = "";
+        private bool _removeAfterTriggering;
+        public bool RemoveAfterTriggering
+        {
+            get { return _removeAfterTriggering; }
+            set { _removeAfterTriggering = value; OnPropertyChanged(); }
+        }
+
 
         private int _hours = 0;
         public int Hours
@@ -78,7 +86,6 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
         }
 
         private IDialogService dialogService;
-
 
         private bool _isRepeat;
         public bool IsRepeat
@@ -117,14 +124,14 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
 
                     if (ACTION == "ADD")
                     {
-                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, true)))
+                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, true, RemoveAfterTriggering)))
                             MessageBox.Show("Error! Alarm clock was not added to the database.");
 
                         form.Close();
                     }
                     else if(ACTION == "EDIT")
                     {
-                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, IsEnabled)))
+                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, IsEnabled, RemoveAfterTriggering)))
                             MessageBox.Show("Error! Alarm clock has not been modified in the database.");
 
                         form.Close();

@@ -5,6 +5,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using Timebox.Core;
+using Windows.Foundation.Collections;
 
 namespace Timebox.MVVM.Model
 {
@@ -37,6 +38,14 @@ namespace Timebox.MVVM.Model
             set { _isEnabled = value; if (_isEnabled == true){ TextOpacity = 1; IsChecked = true; } else { TextOpacity = 0.7; if (IsChecked) IsChecked = false; } OnPropertyChanged(); }
         }
 
+        private bool _removeAfterTriggering;
+        public bool RemoveAfterTriggering
+        {
+            get { return _removeAfterTriggering; }
+            set { _removeAfterTriggering = value; OnPropertyChanged(); }
+        }
+
+
         #endregion
 
         #region [Non-database properties]
@@ -67,9 +76,12 @@ namespace Timebox.MVVM.Model
             set { _repeat = value; OnPropertyChanged(); }
         }
 
+        [NotMapped]
+        private static SoundPlayer _simpleSound;
+
         #endregion
 
-        public Alarm(string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled)
+        public Alarm(string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled, bool removeAfterTriggering)
         {
             CheckedCommand = new RelayCommand(Checked);
             UncheckedCommand = new RelayCommand(Uncheck);
@@ -79,9 +91,10 @@ namespace Timebox.MVVM.Model
             SoundSource = soundSource;
             IsRepeat = isRepeat;
             IsEnabled = isEnabled;
+            RemoveAfterTriggering = removeAfterTriggering;
         }
 
-        public Alarm(ulong id, string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled)
+        public Alarm(ulong id, string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled, bool removeAfterTriggering)
         {
             CheckedCommand = new RelayCommand(Checked);
             UncheckedCommand = new RelayCommand(Uncheck);
@@ -91,7 +104,8 @@ namespace Timebox.MVVM.Model
             TriggerTime = triggerTime;
             SoundSource = soundSource;
             IsRepeat = isRepeat;
-            IsEnabled = isEnabled;         
+            IsEnabled = isEnabled;
+            RemoveAfterTriggering = removeAfterTriggering;
         } 
 
         #region [Commands]
@@ -106,17 +120,49 @@ namespace Timebox.MVVM.Model
 
         #region [Events]
 
-        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+        internal static void ToastNotificationManagerCompat_OnActivated(ToastNotificationActivatedEventArgsCompat toastArgs)
         {
-            var notify = new ToastContentBuilder();
-            notify.AddText($"{Description}");
-            
-            notify.Show();
+            // Obtain the arguments from the notification
+            ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
 
+            // Obtain any user input (text boxes, menu selections) from the notification
+            ValueSet userInput = toastArgs.UserInput;
+
+            // Need to dispatch to UI thread if performing UI operations
+
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                // TODO: Show the corresponding content
+                switch (args["action"])
+                {
+                    case "ok": _simpleSound.Stop(); break;
+                    case "delay":
+                    {
+
+                        break;
+                    }
+                }
+            });
+        }
+        
+        private async void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            // Notification
+            var notify = new ToastContentBuilder();
+            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\source\repos\Timebox\Timebox\Resources\AlarmIconWithBackground.png"), ToastGenericAppLogoCrop.Circle);
+            notify.SetToastScenario(ToastScenario.Reminder);
+            notify.AddArgument("action", "viewConversation");
+            notify.AddArgument("conversationId", 9813);
+            notify.AddText($"Alarm {TriggerTime}");
+            notify.AddText($"{Description}");
+            notify.AddButton(new ToastButton().SetContent("Ok").AddArgument("action", "ok"));
+            notify.Show();
+            
+            // Sound
             try
             {
-                SoundPlayer simpleSound = new(@$"{SoundSource}");
-                simpleSound.Play();
+                _simpleSound = new(@$"{SoundSource}");
+                _simpleSound.PlayLooping();
             }
             catch (Exception ex)
             {
@@ -127,9 +173,17 @@ namespace Timebox.MVVM.Model
             if (timer == null)
                 return;
 
-            if (!timer.AutoReset)
-                Stop();          
-            else RestartTimer();
+            if (RemoveAfterTriggering)
+            {
+                await Database.RemoveAlarm(this);
+                return;
+            }
+            else
+            {
+                if (!timer.AutoReset)
+                    Stop();
+                else RestartTimer();
+            }
         }
         #endregion
 
@@ -184,7 +238,7 @@ namespace Timebox.MVVM.Model
         }
         internal void StopTimer()
         {
-            if (timer == null)
+            if (timer == null || !timer.Enabled)
                 return;
 
             timer.Stop();

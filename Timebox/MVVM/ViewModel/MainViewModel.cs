@@ -53,12 +53,12 @@ namespace Timebox.MVVM.ViewModel
 
         #region [Methods]
 
-        private async void NavigateToAlarms()
-        {
-            Navigation.NavigateTo<LoadingScreenViewModel>();
+        //private async void NavigateToAlarms()
+        //{
+        //    Navigation.NavigateTo<LoadingScreenViewModel>();
 
-            await Task.Run(() => { });
-        }
+        //    await Task.Run(() => { });
+        //}
 
         #endregion
     }
