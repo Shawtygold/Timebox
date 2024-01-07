@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Timebox.MVVM.Model.HourglassModel;
 
 namespace Timebox.MVVM.Model
 {
     internal class ApplicationContext : DbContext
     {
         public DbSet<Alarm> Alarms => Set<Alarm>();
+        public DbSet<Hourglass> Hourglasses => Set<Hourglass>();
         public ApplicationContext() => Database.EnsureCreated();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

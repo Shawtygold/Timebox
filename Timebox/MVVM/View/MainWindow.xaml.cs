@@ -18,7 +18,7 @@ namespace Timebox
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            ToastNotificationManagerCompat.History.Clear();
+            ToastNotificationManagerCompat.Uninstall();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

@@ -5,19 +5,18 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using Timebox.Core;
-using Windows.Foundation.Collections;
 
 namespace Timebox.MVVM.Model
 {
     public class Alarm : ObservableObject
     {
         #region [Database properties]
-
+        
         public ulong Id { get; set; }
         public string Description { get; set; } = null!;
         public string TriggerTime { get; set; } = null!;
 
-        private string _soundSource;
+        private string _soundSource = null!;
         public string SoundSource
         {
             get { return _soundSource; }
@@ -76,8 +75,8 @@ namespace Timebox.MVVM.Model
             set { _repeat = value; OnPropertyChanged(); }
         }
 
-        [NotMapped]
-        private static SoundPlayer _simpleSound;
+        //[NotMapped]
+        //private static SoundPlayer? _simpleSound;
 
         #endregion
 
@@ -119,31 +118,6 @@ namespace Timebox.MVVM.Model
         #endregion
 
         #region [Events]
-
-        internal static void ToastNotificationManagerCompat_OnActivated(ToastNotificationActivatedEventArgsCompat toastArgs)
-        {
-            // Obtain the arguments from the notification
-            ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
-
-            // Obtain any user input (text boxes, menu selections) from the notification
-            ValueSet userInput = toastArgs.UserInput;
-
-            // Need to dispatch to UI thread if performing UI operations
-
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                // TODO: Show the corresponding content
-                switch (args["action"])
-                {
-                    case "ok": _simpleSound.Stop(); break;
-                    case "delay":
-                    {
-
-                        break;
-                    }
-                }
-            });
-        }
         
         private async void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
@@ -151,24 +125,25 @@ namespace Timebox.MVVM.Model
             var notify = new ToastContentBuilder();
             notify.AddAppLogoOverride(new Uri(@"C:\Users\user\source\repos\Timebox\Timebox\Resources\AlarmIconWithBackground.png"), ToastGenericAppLogoCrop.Circle);
             notify.SetToastScenario(ToastScenario.Reminder);
-            notify.AddArgument("action", "viewConversation");
-            notify.AddArgument("conversationId", 9813);
+            notify.AddArgument("action", "ALARM_NOTIFICATION_CLICK");
+            //notify.AddArgument("conversationId", 10000);
             notify.AddText($"Alarm {TriggerTime}");
             notify.AddText($"{Description}");
-            notify.AddButton(new ToastButton().SetContent("Ok").AddArgument("action", "ok"));
+            notify.AddButton(new ToastButton().SetContent("Ok").AddArgument("action", "ALARM_OK"));
+            notify.AddAudio(new Uri(SoundSource), true);
             notify.Show();
             
             // Sound
-            try
-            {
-                _simpleSound = new(@$"{SoundSource}");
-                _simpleSound.PlayLooping();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                Stop();
-            }
+            //try
+            //{
+            //    _simpleSound = new(@$"{SoundSource}");
+            //    _simpleSound.PlayLooping();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //    Stop();
+            //}
 
             if (timer == null)
                 return;
@@ -189,7 +164,7 @@ namespace Timebox.MVVM.Model
 
         #region [Methods]
 
-        private int GetIntervalInMillisecond()
+        private double GetIntervalInMillisecond()
         {
             DateTime triggerTime = new();
             try
@@ -201,7 +176,7 @@ namespace Timebox.MVVM.Model
             if (triggerTime < DateTime.Now)
                 triggerTime = triggerTime.AddDays(1);
 
-            return (int)Math.Round((triggerTime - DateTime.Now).TotalSeconds, 0) * 1000;
+            return Math.Round((triggerTime - DateTime.Now).TotalMilliseconds, 0);
         }
         private async void Start()
         {
@@ -223,20 +198,19 @@ namespace Timebox.MVVM.Model
         }
         private void RestartTimer()
         {
-            if (timer == null) //LOGIC
+            if (timer == null)
                 return;
 
-            timer.Interval = (double)(86400)/* * 1000*/;
+            timer.Interval = (double)(86400) * 1000;
         }
-
-        internal void StartTimer()
+        public void StartTimer()
         {
             timer = new(GetIntervalInMillisecond());
             timer.AutoReset = IsRepeat;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
         }
-        internal void StopTimer()
+        public void StopTimer()
         {
             if (timer == null || !timer.Enabled)
                 return;
@@ -244,6 +218,14 @@ namespace Timebox.MVVM.Model
             timer.Stop();
             timer.Dispose();
         }
+
+        //public static void StopSound() 
+        //{
+        //    if (_simpleSound == null)
+        //        return;
+
+        //    _simpleSound.Stop(); 
+        //}
 
         #endregion
     }

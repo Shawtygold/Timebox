@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using Timebox.Core;
 using Timebox.MVVM.Model;
-using Timebox.Services;
 
 namespace Timebox.MVVM.ViewModel.FormViewModel
 {
@@ -14,7 +14,8 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
             AcceptCommand = new RelayCommand(Accept);
-            SetSoundCommand = new RelayCommand(SetSound);
+
+            Sounds = new() { "Alarm", "Alarm2", "Alarm3", "Alarm4", "Alarm5", "Alarm6", "Alarm7", "Alarm8", "Alarm9", "Alarm10" };
 
             ACTION = _action;
 
@@ -28,9 +29,10 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
             AcceptCommand = new RelayCommand(Accept);
-            SetSoundCommand = new RelayCommand(SetSound);
 
             ACTION = _action;
+
+            Sounds = new() { "Alarm", "Alarm2", "Alarm3", "Alarm4", "Alarm5", "Alarm6", "Alarm7", "Alarm8", "Alarm9", "Alarm10" };
 
             Id = alarm.Id;
             DateTime dateTime = DateTime.Parse(alarm.TriggerTime);
@@ -38,9 +40,20 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             Minutes = dateTime.Minute;
             IsRepeat = alarm.IsRepeat;
             Description = alarm.Description;
-            SoundSource = alarm.SoundSource;
             IsEnabled = alarm.IsEnabled;
             RemoveAfterTriggering = alarm.RemoveAfterTriggering;
+
+            int indexSelectedItem = 0;
+            for(int i = 0; i < Sounds.Count; i++)
+            {
+                if (alarm.SoundSource.EndsWith(Sounds[i]))
+                {
+                    indexSelectedItem = i;
+                    break;
+                }
+            }
+
+            SoundSource = Sounds[indexSelectedItem];
         }
 
         #region [Properties]
@@ -55,7 +68,6 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             get { return _removeAfterTriggering; }
             set { _removeAfterTriggering = value; OnPropertyChanged(); }
         }
-
 
         private int _hours = 0;
         public int Hours
@@ -85,7 +97,14 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             set { _soundSource = value; OnPropertyChanged(); }
         }
 
-        private IDialogService dialogService;
+        private ObservableCollection<string> _sounds;
+        public ObservableCollection<string> Sounds
+        {
+            get { return _sounds; }
+            set { _sounds = value; OnPropertyChanged(); }
+        }
+
+        //private IDialogService dialogService;
 
         private bool _isRepeat;
         public bool IsRepeat
@@ -100,7 +119,7 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
         public ICommand CloseCommand { get; set; }
         public ICommand MinimizeCommand { get; set; }
         public ICommand AcceptCommand { get; set; }
-        public ICommand SetSoundCommand { get; set; }
+        //public ICommand SetSoundCommand { get; set; }
 
         private void Close(object obj)
         {
@@ -116,7 +135,7 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
         {
             if(obj is Window form)
             {
-                string msg = Validator.Validate(Hours, Minutes, SoundSource);
+                string msg = Validator.ValidateAlarm(Hours, Minutes);
                 if(msg == "OK")
                 {
                     string minutes = Minutes.ToString();
@@ -124,14 +143,14 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
 
                     if (ACTION == "ADD")
                     {
-                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, true, RemoveAfterTriggering)))
+                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", $"ms-winsoundevent:Notification.Looping.{SoundSource}", IsRepeat, true, RemoveAfterTriggering)))
                             MessageBox.Show("Error! Alarm clock was not added to the database.");
 
                         form.Close();
                     }
                     else if(ACTION == "EDIT")
                     {
-                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", SoundSource, IsRepeat, IsEnabled, RemoveAfterTriggering)))
+                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", $"ms-winsoundevent:Notification.Looping.{SoundSource}", IsRepeat, IsEnabled, RemoveAfterTriggering)))
                             MessageBox.Show("Error! Alarm clock has not been modified in the database.");
 
                         form.Close();
@@ -143,14 +162,15 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
                 }
             }
         }
-        private void SetSound(object obj)
-        {
-            dialogService = new DialogService();
-            if(dialogService.OpenFileDialog() == true)
-            {
-                SoundSource = dialogService.FilePath;
-            }
-        }
+
+        //private void SetSound(object obj)
+        //{
+        //    dialogService = new DialogService();
+        //    if(dialogService.OpenFileDialog() == true)
+        //    {
+        //        SoundSource = dialogService.FilePath;
+        //    }
+        //}
 
         #endregion
     }

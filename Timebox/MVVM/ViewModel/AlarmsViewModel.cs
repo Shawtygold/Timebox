@@ -19,16 +19,61 @@ namespace Timebox.MVVM.ViewModel
             EditAlarmCommand = new RelayCommand(EditAlarm);
             DeleteAlarmCommand = new RelayCommand(DeleteAlarm);
             Database.DataChanged += Database_DataChanged;
-            
+
             Alarms = Database.GetAlarms();
 
             // Starting alarms that have the Enabled status
             AlarmHelper.AlarmStart(Alarms);
         }
 
-        private void Database_DataChanged()
+        private void Database_DataChanged(DatabaseChangedEventArgs e)
         {
-            UpdateAlarms();
+            if (e.ChangedElement == null || Alarms == null)
+                return;
+
+            Alarm alarm = e.ChangedElement as Alarm;
+
+            if (e.Action == "ADD")
+            {
+                Alarms.Add(alarm);
+
+                if (alarm.IsEnabled)
+                    alarm.StartTimer();
+
+                return;
+            }
+            else if (e.Action == "EDIT")
+            {
+                // I get an old element with the same id
+                var alarm1 = Alarms.First(a => a.Id == alarm.Id);
+                int index = Alarms.IndexOf(alarm1);
+
+                alarm1.StopTimer();
+                try
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Remove(alarm1)));
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+                try
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Insert(index, alarm)));
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+                if (alarm.IsEnabled)
+                    alarm.StartTimer();
+
+                return;
+            }
+            else if (e.Action == "REMOVE")
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Remove(alarm)));
+
+                if (alarm.IsEnabled)
+                    alarm.StopTimer();
+
+            }
         }
 
         #region [Properties]
@@ -58,7 +103,7 @@ namespace Timebox.MVVM.ViewModel
 
         #region [Commands]
 
-        public ICommand AddAlarmCommand { get; set; }  
+        public ICommand AddAlarmCommand { get; set; }
         public ICommand EditAlarmCommand { get; set; }
         public ICommand DeleteAlarmCommand { get; set; }
 
@@ -90,7 +135,7 @@ namespace Timebox.MVVM.ViewModel
                 return;
             }
 
-            if(!await Database.RemoveAlarm(SelectedItem))
+            if (!await Database.RemoveAlarm(SelectedItem))
                 MessageBox.Show("Failed to delete the alarm clock from the database!");
         }
 
@@ -98,17 +143,17 @@ namespace Timebox.MVVM.ViewModel
 
         #region Methods
 
-        private void UpdateAlarms()
-        {
-            // Останавливаю таймеры на текущих объектах будильников, чей статус IsEnabled = true (чтобы не сработали когда должны сработать таймеры на новых объектах будильников)
-            AlarmHelper.AlarmStop(Alarms);
+        //private void UpdateAlarms()
+        //{
+        //    // Останавливаю таймеры на текущих объектах будильников, чей статус IsEnabled = true (чтобы не сработали когда должны сработать таймеры на новых объектах будильников)
+        //    AlarmHelper.AlarmStop(Alarms);
 
-            // Получаю список таймеров из базы данных (Alarms теперь содержит новые объекты будильников (new Alarm))
-            Alarms = Database.GetAlarms();
+        //    // Получаю список таймеров из базы данных (Alarms теперь содержит новые объекты будильников (new Alarm))
+        //    Alarms = Database.GetAlarms();
 
-            // Запускаю таймеры на будильниках, у которых IsEnabled = true
-            AlarmHelper.AlarmStart(Alarms);
-        }
+        //    // Запускаю таймеры на будильниках, у которых IsEnabled = true
+        //    AlarmHelper.AlarmStart(Alarms);
+        //} 
 
         #endregion
     }

@@ -5,8 +5,9 @@ namespace Timebox.MVVM.Model
 {
     internal class Database
     {
-        public static event Action DataChanged;
-        private static void OnDataChanged() => DataChanged?.Invoke();
+        public static event DataChangedHandler? DataChanged;
+        public delegate void DataChangedHandler(DatabaseChangedEventArgs e);
+        private static void OnDataChanged(DatabaseChangedEventArgs e) => DataChanged?.Invoke(e);
 
         public static async Task<bool> AddAlarm(Alarm alarm)
         {
@@ -21,20 +22,20 @@ namespace Timebox.MVVM.Model
                 await db.Alarms.AddAsync(alarm);
                 await db.SaveChangesAsync();
                 result = true;
-                OnDataChanged();
+
+                Alarm alarmWithId = db.Alarms.ToList()[^1];
+                OnDataChanged(new DatabaseChangedEventArgs("ADD", alarmWithId));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                return false;
             }
 
             return result;
-
         }
         public static async Task<bool> EditAlarm(Alarm alarm)
         {
-            if(alarm == null)
+            if (alarm == null)
                 return false;
 
             bool result = false;
@@ -45,19 +46,19 @@ namespace Timebox.MVVM.Model
                 db.Alarms.Update(alarm);
                 await db.SaveChangesAsync();
                 result = true;
-                OnDataChanged();
+
+                OnDataChanged(new DatabaseChangedEventArgs("EDIT", alarm));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                return false;
             }
 
             return result;
         }
         public static async Task<bool> RemoveAlarm(Alarm alarm)
         {
-            if(alarm == null)
+            if (alarm == null)
                 return false;
 
             bool result = false;
@@ -68,12 +69,12 @@ namespace Timebox.MVVM.Model
                 await Task.Run(() => db.Alarms.Remove(alarm));
                 await db.SaveChangesAsync();
                 result = true;
-                OnDataChanged();
+
+                OnDataChanged(new DatabaseChangedEventArgs("REMOVE", alarm));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                return false;
             }
 
             return result;

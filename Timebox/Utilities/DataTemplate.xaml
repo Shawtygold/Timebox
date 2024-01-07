@@ -10,5 +10,9 @@
     <DataTemplate DataType="{x:Type vm:AlarmsViewModel}">
         <view:AlarmsView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HourglassViewModel}">
+        <view:HourglassView/>
+    </DataTemplate>
     
 </ResourceDictionary>

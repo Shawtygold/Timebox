@@ -15,7 +15,8 @@ namespace Timebox.MVVM.ViewModel
             CloseCommand = new RelayCommand(Close);
             MinimizeCommand = new RelayCommand(Minimize);
 
-            NavigateToAlarmsCommand = new RelayCommand(NavigateToAlarm);       
+            NavigateToAlarmsCommand = new RelayCommand(NavigateToAlarm);   
+            NavigateToHourglassCommand = new RelayCommand(NavigateToHourglass);
 
             Navigation.NavigateTo<LoadingScreenViewModel>();
             Navigation.NavigateTo<AlarmsViewModel>();                    
@@ -24,7 +25,6 @@ namespace Timebox.MVVM.ViewModel
         #region [Properties]
 
         public string AppTitle { get; set; }
-
 
         private INavigationService _navigation;
         public INavigationService Navigation
@@ -40,13 +40,14 @@ namespace Timebox.MVVM.ViewModel
         public ICommand CloseCommand { get; set; }
         public ICommand MinimizeCommand { get; set; }
         public ICommand NavigateToAlarmsCommand { get; set; }
+        public ICommand NavigateToHourglassCommand { get; set; }
 
         private void Close(object obj) => Application.Current.Shutdown();
         private void Minimize(object obj) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
         private void NavigateToAlarm(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
         //private void NavigateToClock(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
         //private void NavigateToStopwatch(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
-        //private void NavigateToHourglass(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
+        private void NavigateToHourglass(object obj) => Navigation.NavigateTo<HourglassViewModel>();
 
 
         #endregion

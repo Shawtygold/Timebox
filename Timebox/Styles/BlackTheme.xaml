@@ -614,4 +614,89 @@
         </Setter>
     </Style>
 
+    <!--ListViewItem Style-->
+    <Style TargetType="ListViewItem" x:Key="Alarm">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="border"
+                            CornerRadius="4"                             
+                            Height="220"
+                            MaxWidth="384">
+                        <Border.Background>
+                            <SolidColorBrush Color="#202020" x:Name="BorderBackground"/>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ui:ProgressRing Progress="{Binding Progress}"
+                                             Width="150" 
+                                             Height="150"
+                                             BorderThickness="0"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             RenderTransformOrigin="0.5,0.5"
+                                             Foreground="{Binding ProgressRingColor}"
+                                             Background="Transparent">
+                                <ui:ProgressRing.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="-90"/>
+                                        <ScaleTransform ScaleX="-1" />
+                                    </TransformGroup>
+                                </ui:ProgressRing.RenderTransform>
+                            </ui:ProgressRing>
+
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="32"
+                                       Text="{Binding RemainingTime, StringFormat=N0}"
+                                       Foreground="White"/>
+
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,18,23">
+                                <TextBox Grid.Row="1" Width="150" Text="{Binding HourglassTime}"/>
+                                <Button Height="35" Margin="10,0,0,0" Width="70" Content="Start" Background="#6D79FF" Command="{Binding StartCommand}"/>
+                                <Button Height="35" Margin="10,0,0,0" Width="70" Content="Stop" Command="{Binding StopCommand}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+
+                        <EventTrigger RoutedEvent="Border.MouseEnter"
+                                      SourceName="border">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#202020"
+                                                    To="#292929"
+                                                    Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="Border.MouseLeave"
+                                      SourceName="border">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#292929"
+                                                    To="#202020"
+                                                    Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="#303030"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Timebox.MVVM.View.HourglassView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Timebox.MVVM.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="588" d:DesignWidth="420">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:ProgressRing Progress="{Binding Progress}" Width="200" Height="200" BorderThickness="0" HorizontalAlignment="Center"
+                          VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Foreground="{Binding ProgressRingColor}" Background="Transparent">
+            <ui:ProgressRing.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90"/>
+                    <ScaleTransform ScaleX="-1" />
+                </TransformGroup>
+            </ui:ProgressRing.RenderTransform>
+        </ui:ProgressRing>
+
+        <TextBlock HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="32"
+                   Text="{Binding RemainingTime, StringFormat=N0}"
+                   Foreground="White"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,18,23">
+            <TextBox Grid.Row="1" Width="150" Text="{Binding HourglassTime}"/>
+            <Button Height="35" Margin="10,0,0,0" Width="70" Content="Start" Background="#6D79FF" Command="{Binding StartCommand}"/>
+            <Button Height="35" Margin="10,0,0,0" Width="70" Content="Stop" Command="{Binding StopCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

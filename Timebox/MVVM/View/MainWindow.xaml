@@ -59,10 +59,10 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Margin="0,8,0,0">
-                <menu:Btn Style="{DynamicResource AlarmsButton}" IsChecked="True" Margin="0,0,15,0"/>
+                <menu:Btn Style="{DynamicResource AlarmsButton}" IsChecked="True" Margin="0,0,15,0" Command="{Binding NavigateToAlarmsCommand}"/>
                 <menu:Btn Style="{DynamicResource ClockButton}" Margin="0,0,15,0"/>
                 <menu:Btn Style="{DynamicResource StopwatchButton}" Margin="0,0,15,0"/>
-                <menu:Btn Style="{DynamicResource HourglassButton}"/>
+                <menu:Btn Style="{DynamicResource HourglassButton}" Command="{Binding NavigateToHourglassCommand}"/>
             </StackPanel>
 
             <ContentControl Grid.Row="2"
