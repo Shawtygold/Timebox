@@ -20,35 +20,35 @@ namespace Timebox.MVVM.ViewModel
             EditHourglassCommand = new RelayCommand(EditHourglass);
             RemoveHourglassCommand = new RelayCommand(RemoveHourglass);
 
-            Hourglass = HourglassDatabase.GetHourglass();
+            Hourglasses = HourglassDatabase.GetHourglass();
             HourglassDatabase.DataChanged += HourglassDatabase_DataChanged;
         }
 
         private void HourglassDatabase_DataChanged(DatabaseChangedEventArgs e)
         {
-            if (e.ChangedElement is not Hourglass hourglass || Hourglass == null)
+            if (e.ChangedElement is not Hourglass hourglass || Hourglasses == null)
                 return;
 
             if (e.Action == "ADD")
             {
                 try
                 {
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Add(hourglass)));
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglasses.Add(hourglass)));
                 }
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
             else if (e.Action == "EDIT")
             {
-                Hourglass? oldHourglass = Hourglass.ToList().Find(h => h.Id == hourglass.Id);
+                Hourglass? oldHourglass = Hourglasses.ToList().Find(h => h.Id == hourglass.Id);
                 if (oldHourglass == null)
                     return;
 
-                int index = Hourglass.IndexOf(oldHourglass);
+                int index = Hourglasses.IndexOf(oldHourglass);
 
                 try
                 {
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Remove(oldHourglass)));
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Insert(index, hourglass)));
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglasses.Remove(oldHourglass)));
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglasses.Insert(index, hourglass)));
                 }
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
@@ -56,7 +56,7 @@ namespace Timebox.MVVM.ViewModel
             {
                 try
                 {
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Remove(hourglass)));
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglasses.Remove(hourglass)));
                 }
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
@@ -80,11 +80,11 @@ namespace Timebox.MVVM.ViewModel
         }
 
 
-        private ObservableCollection<Hourglass>? _hourglass;
-        public ObservableCollection<Hourglass>? Hourglass
+        private ObservableCollection<Hourglass>? _hourglasses;
+        public ObservableCollection<Hourglass>? Hourglasses
         {
-            get { return _hourglass; }
-            set { _hourglass = value; OnPropertyChanged(); }
+            get { return _hourglasses; }
+            set { _hourglasses = value; OnPropertyChanged(); }
         }
 
         #endregion

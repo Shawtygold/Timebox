@@ -172,7 +172,7 @@ namespace Timebox.MVVM.Model
 
             // Notification
             var notify = new ToastContentBuilder();
-            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\source\repos\Timebox\Timebox\Resources\AlarmIconWithBackground.png"), ToastGenericAppLogoCrop.Circle);
+            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\Pictures\Figma\HourglassWithBackground.png"), ToastGenericAppLogoCrop.Circle);
             notify.SetToastScenario(ToastScenario.Reminder);
             notify.AddArgument("action", "HOURGLASS_NOTIFICATION_CLICK");
             //notify.AddArgument("conversationId", 9813);
