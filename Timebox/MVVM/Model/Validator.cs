@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Timebox.MVVM.Model
+﻿namespace Timebox.MVVM.Model
 {
     internal class Validator
     {
@@ -8,7 +6,7 @@ namespace Timebox.MVVM.Model
         {
             string exceptionMsg = "";
 
-            if((minutes > 59 || minutes < 0) || (hours > 23 || hours < 0))
+            if((hours > 23 || hours < 0) || (minutes > 59 || minutes < 0))
                 exceptionMsg += "Incorrect time entry.\n";
 
             if (exceptionMsg.Trim() != "")
@@ -21,7 +19,7 @@ namespace Timebox.MVVM.Model
         {
             string exceptionMsg = "";
 
-            if ((minutes > 59 || minutes < 0) || (hours > 23 || hours < 0) || (seconds > 59 || seconds < 0))
+            if ((hours > 99 || hours < 0) || (minutes > 59 || minutes < 0)  || (seconds > 59 || seconds < 0))
                 exceptionMsg += "Incorrect time entry.\n";
 
             if (exceptionMsg.Trim() != "")

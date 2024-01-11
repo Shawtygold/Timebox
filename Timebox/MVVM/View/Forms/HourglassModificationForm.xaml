@@ -7,13 +7,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Timebox.MVVM.View.Forms"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="HourglassModificationForm"
         Height="215"
         Width="356"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Name="Form">
     <Window.Resources>
 
         <SolidColorBrush Color="#2B2B2B" x:Key="TbBackgroundColor"/>
@@ -193,7 +195,7 @@
                                   ClearButtonEnabled="False"
                                   Text="{Binding Hours}"
                                   Minimum="0"
-                                  Maximum="100"/>
+                                  Maximum="99"/>
                     <TextBlock Text=":"
                                Margin="4,0,4,0"
                                FontSize="20"

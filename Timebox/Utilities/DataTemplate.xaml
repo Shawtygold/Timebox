@@ -3,9 +3,9 @@
                     xmlns:vm="clr-namespace:Timebox.MVVM.ViewModel"
                     xmlns:view="clr-namespace:Timebox.MVVM.View">
 
-    <DataTemplate DataType="{x:Type vm:LoadingScreenViewModel}">
+    <!--<DataTemplate DataType="{x:Type vm:LoadingScreenViewModel}">
         <view:LoadingScreenView/>
-    </DataTemplate>
+    </DataTemplate>-->
 
     <DataTemplate DataType="{x:Type vm:AlarmsViewModel}">
         <view:AlarmsView/>

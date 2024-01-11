@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Timebox.MVVM.Model
+﻿namespace Timebox.MVVM.Model
 {
     internal class Converter
     {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Timebox.MVVM.Model.HourglassModel;
 
 namespace Timebox.MVVM.Model
 {

@@ -58,7 +58,7 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
 
         #region [Properties]
 
-        private static string ACTION;
+        private static string ACTION = null!;
         private ulong Id { get; set; }
         private bool IsEnabled { get; set; }
 
@@ -97,14 +97,12 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
             set { _soundSource = value; OnPropertyChanged(); }
         }
 
-        private ObservableCollection<string> _sounds;
-        public ObservableCollection<string> Sounds
+        private ObservableCollection<string>? _sounds;
+        public ObservableCollection<string>? Sounds
         {
             get { return _sounds; }
             set { _sounds = value; OnPropertyChanged(); }
         }
-
-        //private IDialogService dialogService;
 
         private bool _isRepeat;
         public bool IsRepeat
@@ -119,7 +117,6 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
         public ICommand CloseCommand { get; set; }
         public ICommand MinimizeCommand { get; set; }
         public ICommand AcceptCommand { get; set; }
-        //public ICommand SetSoundCommand { get; set; }
 
         private void Close(object obj)
         {
@@ -143,15 +140,15 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
 
                     if (ACTION == "ADD")
                     {
-                        if (!await Database.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", $"ms-winsoundevent:Notification.Looping.{SoundSource}", IsRepeat, true, RemoveAfterTriggering)))
-                            MessageBox.Show("Error! Alarm clock was not added to the database.");
+                        if (!await AlarmDatabase.AddAlarm(new Alarm(Description, $"{Hours}:{minutes}", $"ms-winsoundevent:Notification.Looping.{SoundSource}", IsRepeat, true, RemoveAfterTriggering)))
+                            MessageBox.Show("Error! The alarm has not been added to the database.");
 
                         form.Close();
                     }
                     else if(ACTION == "EDIT")
                     {
-                        if (!await Database.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", $"ms-winsoundevent:Notification.Looping.{SoundSource}", IsRepeat, IsEnabled, RemoveAfterTriggering)))
-                            MessageBox.Show("Error! Alarm clock has not been modified in the database.");
+                        if (!await AlarmDatabase.EditAlarm(new Alarm(Id, Description, $"{Hours}:{minutes}", $"ms-winsoundevent:Notification.Looping.{SoundSource}", IsRepeat, IsEnabled, RemoveAfterTriggering)))
+                            MessageBox.Show("Error! The alarm has not been edited in the database.");
 
                         form.Close();
                     }
@@ -162,15 +159,6 @@ namespace Timebox.MVVM.ViewModel.FormViewModel
                 }
             }
         }
-
-        //private void SetSound(object obj)
-        //{
-        //    dialogService = new DialogService();
-        //    if(dialogService.OpenFileDialog() == true)
-        //    {
-        //        SoundSource = dialogService.FilePath;
-        //    }
-        //}
 
         #endregion
     }

@@ -18,7 +18,7 @@ namespace Timebox.MVVM.ViewModel
             NavigateToAlarmsCommand = new RelayCommand(NavigateToAlarm);   
             NavigateToHourglassCommand = new RelayCommand(NavigateToHourglass);
 
-            Navigation.NavigateTo<LoadingScreenViewModel>();
+            //Navigation.NavigateTo<LoadingScreenViewModel>();
             Navigation.NavigateTo<AlarmsViewModel>();                    
         }
 
@@ -49,17 +49,6 @@ namespace Timebox.MVVM.ViewModel
         //private void NavigateToStopwatch(object obj) => Navigation.NavigateTo<AlarmsViewModel>();
         private void NavigateToHourglass(object obj) => Navigation.NavigateTo<HourglassViewModel>();
 
-
-        #endregion
-
-        #region [Methods]
-
-        //private async void NavigateToAlarms()
-        //{
-        //    Navigation.NavigateTo<LoadingScreenViewModel>();
-
-        //    await Task.Run(() => { });
-        //}
 
         #endregion
     }

@@ -2,9 +2,9 @@
 {
     internal class DatabaseChangedEventArgs
     {
-        public Alarm? ChangedElement { get; set; } // Contains an added or modified alarm
+        public object? ChangedElement { get; set; } // Contains an added or modified object (alarm or hourglass)
         public string Action { get; set; }
-        public DatabaseChangedEventArgs(string action, Alarm? changedElement)
+        public DatabaseChangedEventArgs(string action, object? changedElement)
         {
             Action = action;
             ChangedElement = changedElement;

@@ -18,9 +18,9 @@ namespace Timebox.MVVM.ViewModel
             AddAlarmCommand = new RelayCommand(AddAlarm);
             EditAlarmCommand = new RelayCommand(EditAlarm);
             DeleteAlarmCommand = new RelayCommand(DeleteAlarm);
-            Database.DataChanged += Database_DataChanged;
+            AlarmDatabase.DataChanged += Database_DataChanged;
 
-            Alarms = Database.GetAlarms();
+            Alarms = AlarmDatabase.GetAlarms();
 
             // Starting alarms that have the Enabled status
             AlarmHelper.AlarmStart(Alarms);
@@ -28,14 +28,12 @@ namespace Timebox.MVVM.ViewModel
 
         private void Database_DataChanged(DatabaseChangedEventArgs e)
         {
-            if (e.ChangedElement == null || Alarms == null)
+            if (e.ChangedElement is not Alarm alarm || Alarms == null) 
                 return;
-
-            Alarm alarm = e.ChangedElement as Alarm;
 
             if (e.Action == "ADD")
             {
-                Alarms.Add(alarm);
+                Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Add(alarm)));
 
                 if (alarm.IsEnabled)
                     alarm.StartTimer();
@@ -45,18 +43,13 @@ namespace Timebox.MVVM.ViewModel
             else if (e.Action == "EDIT")
             {
                 // I get an old element with the same id
-                var alarm1 = Alarms.First(a => a.Id == alarm.Id);
-                int index = Alarms.IndexOf(alarm1);
+                var oldAlarm = Alarms.First(a => a.Id == alarm.Id);
+                int index = Alarms.IndexOf(oldAlarm);
 
-                alarm1.StopTimer();
+                oldAlarm.StopTimer();
                 try
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Remove(alarm1)));
-                }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
-
-                try
-                {
+                    Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Remove(oldAlarm)));
                     Application.Current.Dispatcher.Invoke(new Action(() => Alarms.Insert(index, alarm)));
                 }
                 catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -135,7 +128,7 @@ namespace Timebox.MVVM.ViewModel
                 return;
             }
 
-            if (!await Database.RemoveAlarm(SelectedItem))
+            if (!await AlarmDatabase.RemoveAlarm(SelectedItem))
                 MessageBox.Show("Failed to delete the alarm clock from the database!");
         }
 

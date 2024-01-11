@@ -1,9 +1,12 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using Timebox.Core;
 using Timebox.MVVM.Model;
-using Timebox.MVVM.Model.HourglassModel;
+using Timebox.MVVM.View.Forms;
+using Timebox.MVVM.ViewModel.FormViewModel;
 using Timebox.Services;
+using Windows.UI.WebUI;
 
 namespace Timebox.MVVM.ViewModel
 {
@@ -13,31 +16,50 @@ namespace Timebox.MVVM.ViewModel
         {
             Navigation = navigation;
 
-            StartCommand = new RelayCommand(Start);
-            StopCommand = new RelayCommand(Stop);
+            AddHourglassCommand = new RelayCommand(AddHourglass);
+            EditHourglassCommand = new RelayCommand(EditHourglass);
+            RemoveHourglassCommand = new RelayCommand(RemoveHourglass);
 
-            _hourglass = new();
-            _hourglass.RemainingTimeChanged += Hourglass_RemainingTimeChanged;
-            _hourglass.Elapsed += Hourglass_Elapsed;
-            RemainingTime = Converter.ConvertSecondsToTime(_hourglass.Interval);
+            Hourglass = HourglassDatabase.GetHourglass();
+            HourglassDatabase.DataChanged += HourglassDatabase_DataChanged;
         }
 
-        private void Hourglass_Elapsed(object sender, HourglassElapsedEventArgs e)
+        private void HourglassDatabase_DataChanged(DatabaseChangedEventArgs e)
         {
-            ProgressRingColor = "#303030";
-        }
-
-        private void Hourglass_RemainingTimeChanged(object sender, HourglassChangedEventArgs e)
-        {
-            if(_hourglass == null)
+            if (e.ChangedElement is not Hourglass hourglass || Hourglass == null)
                 return;
 
-            ProgressRingColor = "#6D79FF";
+            if (e.Action == "ADD")
+            {
+                try
+                {
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Add(hourglass)));
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+            }
+            else if (e.Action == "EDIT")
+            {
+                Hourglass? oldHourglass = Hourglass.ToList().Find(h => h.Id == hourglass.Id);
+                if (oldHourglass == null)
+                    return;
 
-            int remainingTime = e.RemainingTime;
+                int index = Hourglass.IndexOf(oldHourglass);
 
-            RemainingTime = Converter.ConvertSecondsToTime(remainingTime);
-            Progress = GetPercent(_hourglass.Interval, remainingTime);
+                try
+                {
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Remove(oldHourglass)));
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Insert(index, hourglass)));
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+            }
+            else if (e.Action == "REMOVE")
+            {
+                try
+                {
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => Hourglass.Remove(hourglass)));
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+            }
         }
 
         #region [Properties]
@@ -50,71 +72,61 @@ namespace Timebox.MVVM.ViewModel
         }
 
 
-        private double _progress;
-        public double Progress
+        private Hourglass? _selectedItem;
+        public Hourglass? SelectedItem
         {
-            get { return _progress; }
-            set { _progress = value; OnPropertyChanged(); }
-        }
-
-        private string _progressRingColor = "#303030";
-        public string ProgressRingColor
-        {
-            get { return _progressRingColor; }
-            set { _progressRingColor = value; OnPropertyChanged(); }
+            get { return _selectedItem; }
+            set { _selectedItem = value; OnPropertyChanged(); }
         }
 
 
-        private readonly Hourglass? _hourglass;
-
-        private string _remainingTime = "0";
-        public string RemainingTime
+        private ObservableCollection<Hourglass>? _hourglass;
+        public ObservableCollection<Hourglass>? Hourglass
         {
-            get { return _remainingTime; }
-            set { _remainingTime = value; OnPropertyChanged(); }
-        }
-
-        private int? IntervalInSeconds { get; set; }
-
-        private string _hourglassTime;
-        public string HourglassTime
-        {
-            get { return _hourglassTime; }
-            set { _hourglassTime = value; IntervalInSeconds = Converter.ConvertTimeToSeconds(_hourglassTime); if (IntervalInSeconds == null) { MessageBox.Show("Enter the time in the format hh:mm:ss (01:30:59)"); return; } if (_hourglass != null) _hourglass.ChangeInterval((int)IntervalInSeconds); OnPropertyChanged(); }
+            get { return _hourglass; }
+            set { _hourglass = value; OnPropertyChanged(); }
         }
 
         #endregion
 
         #region [Commands]
 
-        public ICommand StartCommand { get; set; }
-        public ICommand StopCommand { get; set; }
+        public ICommand AddHourglassCommand { get; set; }
+        public ICommand EditHourglassCommand { get; set; }
+        public ICommand RemoveHourglassCommand { get; set; }
 
-        private void Start(object obj)
+        private void AddHourglass(object obj)
         {
-            if (_hourglass == null || IntervalInSeconds == null)
-                return;
-
-            _hourglass.Start();
+            HourglassModificationForm form = new();
+            HourglassModificationViewModel vm = new("ADD");
+            form.DataContext = vm;
+            form.ShowDialog();
         }
-        private void Stop(object obj)
+        private void EditHourglass(object obj)
         {
-            if (_hourglass == null)
+            if (SelectedItem == null)
+            {
+                MessageBox.Show("Choose an hourglass!");
                 return;
+            }
 
-            _hourglass.Stop();
+            HourglassModificationForm form = new();
+            HourglassModificationViewModel vm = new("EDIT", SelectedItem);
+            form.DataContext = vm;
+            form.ShowDialog();
+        }
+        private async void RemoveHourglass(object obj)
+        {
+            if (SelectedItem == null)
+            {
+                MessageBox.Show("Choose an hourglass!");
+                return;
+            }
+
+            if(!await HourglassDatabase.RemoveHourglass(SelectedItem))
+                MessageBox.Show("Error! Hourglass has not been removed from the database");
         }
 
         #endregion
-
-        private static double GetPercent(double maxValue, double value)
-        {
-            if (maxValue == 0 || value == 0)
-                return 0;
-
-            double percent = (value * 100) / maxValue;
-
-            return Math.Round(percent, 0);
-        }
     }
 }

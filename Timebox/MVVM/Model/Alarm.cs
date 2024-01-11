@@ -1,6 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Media;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
@@ -75,9 +74,6 @@ namespace Timebox.MVVM.Model
             set { _repeat = value; OnPropertyChanged(); }
         }
 
-        //[NotMapped]
-        //private static SoundPlayer? _simpleSound;
-
         #endregion
 
         public Alarm(string description, string triggerTime, string soundSource, bool isRepeat, bool isEnabled, bool removeAfterTriggering)
@@ -123,7 +119,7 @@ namespace Timebox.MVVM.Model
         {
             // Notification
             var notify = new ToastContentBuilder();
-            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\source\repos\Timebox\Timebox\Resources\AlarmIconWithBackground.png"), ToastGenericAppLogoCrop.Circle);
+            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\source\repos\Timebox\Timebox\Resources\AlarmIconWithBackground.png"), ToastGenericAppLogoCrop.Circle); //!!!!!! CHANGE ICON
             notify.SetToastScenario(ToastScenario.Reminder);
             notify.AddArgument("action", "ALARM_NOTIFICATION_CLICK");
             //notify.AddArgument("conversationId", 10000);
@@ -131,26 +127,14 @@ namespace Timebox.MVVM.Model
             notify.AddText($"{Description}");
             notify.AddButton(new ToastButton().SetContent("Ok").AddArgument("action", "ALARM_OK"));
             notify.AddAudio(new Uri(SoundSource), true);
-            notify.Show();
-            
-            // Sound
-            //try
-            //{
-            //    _simpleSound = new(@$"{SoundSource}");
-            //    _simpleSound.PlayLooping();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    Stop();
-            //}
+            notify.Show();           
 
             if (timer == null)
                 return;
 
             if (RemoveAfterTriggering)
             {
-                await Database.RemoveAlarm(this);
+                await AlarmDatabase.RemoveAlarm(this);
                 return;
             }
             else
@@ -184,7 +168,7 @@ namespace Timebox.MVVM.Model
             {
                 StartTimer();
                 IsEnabled = true;
-                await Database.EditAlarm(this); //изменение поля IsEnabled в бд
+                await AlarmDatabase.EditAlarm(this); //edit IsEnabled in the databse
             }
         }
         private async void Stop()
@@ -193,7 +177,7 @@ namespace Timebox.MVVM.Model
             {
                 StopTimer();
                 IsEnabled = false;
-                await Database.EditAlarm(this); //изменение поля IsEnabled в бд
+                await AlarmDatabase.EditAlarm(this); //изменение поля IsEnabled в бд
             }
         }
         private void RestartTimer()
@@ -218,14 +202,6 @@ namespace Timebox.MVVM.Model
             timer.Stop();
             timer.Dispose();
         }
-
-        //public static void StopSound() 
-        //{
-        //    if (_simpleSound == null)
-        //        return;
-
-        //    _simpleSound.Stop(); 
-        //}
 
         #endregion
     }

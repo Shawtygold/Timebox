@@ -11,7 +11,7 @@
         MinHeight="620"
         MinWidth="420"
         Width="420"
-        Height="620"
+        Height="670"
         RenderOptions.BitmapScalingMode="HighQuality"    
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"

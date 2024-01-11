@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Timebox.MVVM.Model
 {
-    internal class Database
+    internal class AlarmDatabase
     {
         public static event DataChangedHandler? DataChanged;
         public delegate void DataChangedHandler(DatabaseChangedEventArgs e);
@@ -23,6 +23,7 @@ namespace Timebox.MVVM.Model
                 await db.SaveChangesAsync();
                 result = true;
 
+                // Get the added item from the database so that the item has Id 
                 Alarm alarmWithId = db.Alarms.ToList()[^1];
                 OnDataChanged(new DatabaseChangedEventArgs("ADD", alarmWithId));
             }
@@ -86,7 +87,7 @@ namespace Timebox.MVVM.Model
             try
             {
                 using ApplicationContext db = new();
-                result = new(db.Alarms.ToList());              
+                result = new(db.Alarms.ToList());
             }
             catch (Exception ex)
             {
