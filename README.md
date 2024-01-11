@@ -30,6 +30,8 @@ Bot current version:
 ### 📸 Screenshot
 ![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot1.jpg)
 ![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot2.jpg)
+![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot3.jpg)
+![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot4.jpg)
 
  ### 🤝 Support me
  - Please leave me a star if you like it. Thank you very much! 
