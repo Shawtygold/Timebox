@@ -12,7 +12,7 @@ These are libraries that we're using in this project:
 - [MMicrosoft.Xaml.Behaviors.Wpf](https://www.nuget.org/packages/Microsoft.Xaml.Behaviors.Wpf) - version `1.1.77`
 - [Microsoft.Toolkit.Uwp.Notifications](https://github.com/CommunityToolkit/WindowsCommunityToolkit) - version `7.1.3`
 
-Bot current version: 
+Timebox current version: 
 - Version - `1.0`
 
 ### 📖 Functional
