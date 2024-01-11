@@ -27,12 +27,13 @@ Timebox current version:
  - Visual Studio platform `x64`
  - .Net `8.0`
 
-### 📸 Screenshot
+### 📸 Screenshots
 <div align="center">
+ <h3>Alarms</h3>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot1.jpg"/>
- <h1> </1>
+  <h3>Hourglasses</h3>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot2.jpg"/>
-  <h1> </1>
+   <h3>Notifications</h3>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot3.1.jpg"/>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot4.jpg" width="357"/>
 </div>
