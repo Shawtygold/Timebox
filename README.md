@@ -28,10 +28,12 @@ Timebox current version:
  - .Net `8.0`
 
 ### 📸 Screenshot
-![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot1.jpg)
-![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot2.jpg)
-![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot3.1.jpg)
-![Scrennshot](https://github.com/Shawtygold/Timebox/blob/master/Screenshot4.jpg)
+<div align="center">
+  <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot1.jpg"/>
+  <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot2.jpg"/>
+  <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot3.1.jpg"/>
+  <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot4.jpg" width="357"/>
+</div>
 
  ### 🤝 Support me
  - Please leave me a star if you like it. Thank you very much! 
