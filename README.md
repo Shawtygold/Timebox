@@ -18,8 +18,8 @@ Timebox current version:
 ### 📖 Functional
 - Adding, editing, deleting alarms
 - Adding, editing, deleting hourglasses
-- Squaring numbers
-- Clearing calculations
+- Loading...
+- Loading...
 
  ### 📜 Some notes
  This project supports:
