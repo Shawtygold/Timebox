@@ -43,11 +43,11 @@ namespace Timebox.MVVM.Model
             set { _progress = value; OnPropertyChanged(); }
         }
 
-        public delegate void HourglassElapsedHandler(object sender, HourglassElapsedEventArgs e);
-        public event HourglassElapsedHandler? Elapsed;
+        public delegate void ElapsedHandler(object sender, HourglassElapsedEventArgs e);
+        public event ElapsedHandler? Elapsed;
 
-        public delegate void HourglassChangedHandler(object sender, HourglassChangedEventArgs e);
-        public event HourglassChangedHandler RemainingTimeChanged;
+        public delegate void ChangedHandler(object sender, HourglassChangedEventArgs e);
+        public event ChangedHandler RemainingTimeChanged;
 
         public Hourglass(ulong id, string description, int interval)
         {

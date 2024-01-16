@@ -61,7 +61,7 @@
                         Margin="0,8,0,0">
                 <menu:Btn Style="{DynamicResource AlarmsButton}" IsChecked="True" Margin="0,0,15,0" Command="{Binding NavigateToAlarmsCommand}"/>
                 <menu:Btn Style="{DynamicResource ClockButton}" Margin="0,0,15,0"/>
-                <menu:Btn Style="{DynamicResource StopwatchButton}" Margin="0,0,15,0"/>
+                <menu:Btn Style="{DynamicResource StopwatchButton}" Command="{Binding NavigateToStopwatchCommand}" Margin="0,0,15,0"/>
                 <menu:Btn Style="{DynamicResource HourglassButton}" Command="{Binding NavigateToHourglassCommand}"/>
             </StackPanel>
 

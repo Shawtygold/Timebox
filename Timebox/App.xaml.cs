@@ -30,6 +30,7 @@ namespace Timebox
             services.AddSingleton<LoadingScreenViewModel>();
             services.AddSingleton<AlarmsViewModel>();
             services.AddSingleton<HourglassViewModel>();
+            services.AddSingleton<StopwatchViewModel>();
 
             services.AddSingleton<INavigationService, NavigationService>();
 
