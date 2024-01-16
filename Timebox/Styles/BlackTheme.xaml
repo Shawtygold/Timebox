@@ -2,12 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                     xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
-                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:menu="clr-namespace:Timebox.Utilities">
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
 
     <!--MainWindow Styles-->
+
+    <!--app title-->
+    <Style TargetType="TextBlock" x:Key="AppTitle">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontFamily" Value="SegoeFluentIcon"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
     
-    <!--Main Border-->
+    <!--main border-->
     <Style TargetType="Border" x:Key="MainBorder">
         <Setter Property="Background" Value="{ui:ThemeResource ApplicationBackgroundBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -15,7 +21,7 @@
         <Setter Property="CornerRadius" Value="8"/>
     </Style>
 
-    <!--Close Button-->
+    <!--close button-->
     <Style TargetType="Button" x:Key="CloseButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -71,7 +77,7 @@
         </Setter>
     </Style>
 
-    <!--Minimize Button Style-->
+    <!--minimize button style-->
     <Style TargetType="Button" x:Key="MinimizeButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -122,7 +128,7 @@
         </Setter>
     </Style>
 
-    <!--Alarm Button Style-->
+    <!--alarm button style-->
     <Style TargetType="RadioButton" x:Key="AlarmsButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -181,7 +187,7 @@
         </Setter>
     </Style>
 
-    <!--Clock Button Style-->
+    <!--clock button style-->
     <Style TargetType="RadioButton" x:Key="ClockButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -239,7 +245,7 @@
         </Setter>
     </Style>
 
-    <!--Stopwatch Button Style-->
+    <!--stopwatch button style-->
     <Style TargetType="RadioButton" x:Key="StopwatchButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -297,7 +303,7 @@
         </Setter>
     </Style>
 
-    <!--Hourglass Button Style-->
+    <!--hourglass button style-->
     <Style TargetType="RadioButton" x:Key="HourglassButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -359,7 +365,7 @@
     
     <!--Alarm Styles-->
     
-    <!--List View Item Style-->
+    <!--list view item style-->
     <Style TargetType="ListViewItem" x:Key="Alarm">
         <Setter Property="Template">
             <Setter.Value>
@@ -464,7 +470,7 @@
         </Setter>
     </Style>
 
-    <!--Add Alarm Button Style-->
+    <!--add alarm button style-->
     <Style TargetType="Button" x:Key="AddAlarmButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -518,7 +524,7 @@
         </Setter>
     </Style>
 
-    <!--Edit Alarm Button Style-->
+    <!--edit alarm button style-->
     <Style TargetType="Button" x:Key="EditAlarmButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -570,7 +576,7 @@
         </Setter>
     </Style>
 
-    <!--Delete Alarm Button Style-->
+    <!--delete alarm button style-->
     <Style TargetType="Button" x:Key="DeleteAlarmButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -626,7 +632,7 @@
     
     <!--Hourglass Styles-->
     
-    <!--List View Item Style-->
+    <!--list view item style-->
     <Style TargetType="ListViewItem" x:Key="Hourglass">
         <Setter Property="Template">
             <Setter.Value>
@@ -723,7 +729,7 @@
         </Setter>
     </Style>
 
-    <!--Start Button-->
+    <!--start button-->
     <Style TargetType="Button" x:Key="HourglassStartButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -777,7 +783,7 @@
         </Setter>
     </Style>
 
-    <!--Stop Button-->
+    <!--stop button-->
     <Style TargetType="Button" x:Key="HourglassStopButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -833,7 +839,7 @@
         </Setter>
     </Style>
 
-    <!--Reset Button-->
+    <!--reset button-->
     <Style TargetType="Button" x:Key="HourglassResetButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -893,7 +899,31 @@
 
     <!--Stopwatch Styles-->
     
-    <!--Start Button-->
+    <!--passed seconds-->
+    <Style TargetType="TextBlock" x:Key="PassedTime">
+        <Setter Property="FontSize" Value="50"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <!--hours-->
+    <Style TargetType="TextBlock" x:Key="Hours">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <!--minutes-->
+    <Style TargetType="TextBlock" x:Key="Minutes">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <!--seconds-->
+    <Style TargetType="TextBlock" x:Key="Seconds">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <!--start button-->
     <Style TargetType="Button" x:Key="StopwatchStartButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -947,7 +977,7 @@
         </Setter>
     </Style>
 
-    <!--Stop Button-->
+    <!--stop button-->
     <Style TargetType="Button" x:Key="StopwatchStopButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -1003,7 +1033,7 @@
         </Setter>
     </Style>
 
-    <!--Reset Button-->
+    <!--reset button-->
     <Style TargetType="Button" x:Key="StopwatchResetButton">
         <Setter Property="Template">
             <Setter.Value>

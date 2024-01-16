@@ -28,7 +28,7 @@ namespace Timebox.MVVM.ViewModel
         private void Stopwatch_PassedSecondsChanged(object sender, StopwatchSecondsChangedEventArgs e)
         {
             int passedSeconds = e.PassedSeconds;
-            StrPassedSeconds = Converter.ConvertSecondsToTime(passedSeconds);
+            PassedTime = Converter.ConvertSecondsToTime(passedSeconds);
         }
 
         private INavigationService _navigation;
@@ -38,11 +38,11 @@ namespace Timebox.MVVM.ViewModel
             set { _navigation = value; OnPropertyChanged(); }
         }
 
-        private string _strPassedSeconds = "00:00:00";
-        public string StrPassedSeconds
+        private string _passedTime = "00:00:00";
+        public string PassedTime
         {
-            get { return _strPassedSeconds; }
-            set { _strPassedSeconds = value; OnPropertyChanged(); }
+            get { return _passedTime; }
+            set { _passedTime = value; OnPropertyChanged(); }
         }
 
         private readonly Stopwatch _stopwatch;

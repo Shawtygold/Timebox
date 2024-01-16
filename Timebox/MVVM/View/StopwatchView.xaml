@@ -16,29 +16,25 @@
                     VerticalAlignment="Center"
                     Margin="0,0,0,140">
 
-            <TextBlock Text="{Binding StrPassedSeconds}"
+            <TextBlock Text="{Binding PassedTime}"
+                       Style="{DynamicResource PassedTime}"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="50"
-                       Foreground="White"/>
+                       VerticalAlignment="Center"/>
 
             <StackPanel Orientation="Horizontal"
                         Margin="0,0,0,0" Opacity="0.7">
                 
                 <TextBlock Text="h"
-                           Margin="20,0,0,0"
-                           FontSize="17"
-                           Foreground="White"/>
+                           Style="{DynamicResource Hours}"
+                           Margin="20,0,0,0"/>
                 
                 <TextBlock Text="min"
                            Margin="47,0,0,0"
-                           FontSize="17"
-                           Foreground="White"/>
+                           Style="{DynamicResource Minutes}"/>
                 
                 <TextBlock Text="sec"
                            Margin="40,0,0,0"
-                           FontSize="17"
-                           Foreground="White"/>
+                           Style="{DynamicResource Seconds}"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Orientation="Horizontal"
