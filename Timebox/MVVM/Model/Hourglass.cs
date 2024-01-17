@@ -10,13 +10,19 @@ namespace Timebox.MVVM.Model
 {
     internal class Hourglass : ObservableObject
     {
+        #region [Database properties]
+
         public ulong Id { get; set; }
         public string Description { get; set; } = null!;
+        public int Interval { get; set; } // Contains the maximum value of hourglass (In seconds)
+
+        #endregion
+
+        #region [Non-database properties]
 
         private System.Timers.Timer _timer;
-
-        public int Interval { get; set; } // Contains the maximum value of hourglass (In seconds)
-        private bool IsActive { get; set; } = false;
+        
+        [NotMapped] private bool IsActive { get; set; } = false;
         [NotMapped] private int RemainingTime { get; set; } // (In seconds)
 
         private string _strRemainingTime;
@@ -43,11 +49,7 @@ namespace Timebox.MVVM.Model
             set { _progress = value; OnPropertyChanged(); }
         }
 
-        public delegate void ElapsedHandler(object sender, HourglassElapsedEventArgs e);
-        public event ElapsedHandler? Elapsed;
-
-        public delegate void ChangedHandler(object sender, HourglassChangedEventArgs e);
-        public event ChangedHandler RemainingTimeChanged;
+        #endregion
 
         public Hourglass(ulong id, string description, int interval)
         {
@@ -90,6 +92,14 @@ namespace Timebox.MVVM.Model
             _timer.AutoReset = true;
         }
 
+        #region [Events]
+
+        public delegate void ElapsedHandler(object sender, HourglassElapsedEventArgs e);
+        public event ElapsedHandler? Elapsed;
+
+        public delegate void ChangedHandler(object sender, HourglassChangedEventArgs e);
+        public event ChangedHandler RemainingTimeChanged;
+
         private void Hourglass_RemainingTimeChanged(object sender, HourglassChangedEventArgs e)
         {
             ProgressRingColor = "#6D79FF";
@@ -99,6 +109,42 @@ namespace Timebox.MVVM.Model
             StrRemainingTime = Converter.ConvertSecondsToTime(remainingTime);
             Progress = GetPercent(Interval, remainingTime);
         }
+
+        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            RemainingTime--;
+            OnRemainingTimeChanged(new HourglassChangedEventArgs(RemainingTime));
+
+            if (RemainingTime == 0)
+            {
+                _timer.AutoReset = false;
+                _timer.Enabled = false;
+                OnHourglassElapsed(new HourglassElapsedEventArgs(DateTime.Now));
+            }
+        }
+
+        private void Hourglass_Elapsed(object sender, HourglassElapsedEventArgs e)
+        {
+            if (sender is not Hourglass hourglass)
+                return;
+
+            ProgressRingColor = "Transparent";
+
+            // Notification
+            var notify = new ToastContentBuilder();
+            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\Pictures\Figma\HourglassWithBackground.png"), ToastGenericAppLogoCrop.Circle);
+            notify.SetToastScenario(ToastScenario.Reminder);
+            notify.AddArgument("action", "HOURGLASS_NOTIFICATION_CLICK");
+            //notify.AddArgument("conversationId", 9813);
+            notify.AddAudio(new Uri("ms-winsoundevent:Notification.Looping.Alarm3"), true);
+            notify.AddText("Hourglass");
+            notify.AddText($"{Converter.ConvertSecondsToTime(hourglass.Interval)}");
+            notify.AddText($"{Description}");
+            notify.AddButton(new ToastButton().SetContent("Ok").AddArgument("action", "HOURGLASS_OK"));
+            notify.Show();
+        }
+
+        #endregion
 
         #region [Commands]
 
@@ -111,6 +157,8 @@ namespace Timebox.MVVM.Model
         private void Reset1(object obj) => Reset();
 
         #endregion
+
+        #region [Methods]
 
         private void OnRemainingTimeChanged(HourglassChangedEventArgs e) => RemainingTimeChanged?.Invoke(this, e);
         private void OnHourglassElapsed(HourglassElapsedEventArgs e) => Elapsed?.Invoke(this, e);
@@ -149,41 +197,6 @@ namespace Timebox.MVVM.Model
 
             ProgressRingColor = "Transparent";
         }
-
-        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
-        {
-            RemainingTime--;
-            OnRemainingTimeChanged(new HourglassChangedEventArgs(RemainingTime));
-
-            if (RemainingTime == 0)
-            {
-                _timer.AutoReset = false;
-                _timer.Enabled = false;
-                OnHourglassElapsed(new HourglassElapsedEventArgs(DateTime.Now));
-            }
-        }
-
-        private void Hourglass_Elapsed(object sender, HourglassElapsedEventArgs e)
-        {
-            if (sender is not Hourglass hourglass)
-                return;
-
-            ProgressRingColor = "Transparent";
-
-            // Notification
-            var notify = new ToastContentBuilder();
-            notify.AddAppLogoOverride(new Uri(@"C:\Users\user\Pictures\Figma\HourglassWithBackground.png"), ToastGenericAppLogoCrop.Circle);
-            notify.SetToastScenario(ToastScenario.Reminder);
-            notify.AddArgument("action", "HOURGLASS_NOTIFICATION_CLICK");
-            //notify.AddArgument("conversationId", 9813);
-            notify.AddAudio(new Uri("ms-winsoundevent:Notification.Looping.Alarm3"), true);
-            notify.AddText("Hourglass");
-            notify.AddText($"{Converter.ConvertSecondsToTime(hourglass.Interval)}");
-            notify.AddText($"{Description}");
-            notify.AddButton(new ToastButton().SetContent("Ok").AddArgument("action", "HOURGLASS_OK"));
-            notify.Show();
-        }
-
         private static double GetPercent(double maxValue, double value)
         {
             if (maxValue == 0 || value == 0)
@@ -193,5 +206,7 @@ namespace Timebox.MVVM.Model
 
             return Math.Round(percent, 0);
         }
+
+        #endregion
     }
 }

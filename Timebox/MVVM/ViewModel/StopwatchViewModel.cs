@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Timebox.Core;
 using Timebox.MVVM.Model;
 using Timebox.Services;
@@ -31,6 +25,8 @@ namespace Timebox.MVVM.ViewModel
             PassedTime = Converter.ConvertSecondsToTime(passedSeconds);
         }
 
+        #region [Properties]
+
         private INavigationService _navigation;
         public INavigationService Navigation
         {
@@ -47,6 +43,8 @@ namespace Timebox.MVVM.ViewModel
 
         private readonly Stopwatch _stopwatch;
 
+        #endregion
+
         #region [Commands]
 
         public ICommand StartCommand { get; set; }
@@ -60,7 +58,6 @@ namespace Timebox.MVVM.ViewModel
 
             _stopwatch.Start();
         }
-
         private void Stop(object obj)
         {
             if (_stopwatch == null)
@@ -68,7 +65,6 @@ namespace Timebox.MVVM.ViewModel
 
             _stopwatch.Stop();
         }
-
         private void Reset(object obj)
         {
             if (_stopwatch == null)

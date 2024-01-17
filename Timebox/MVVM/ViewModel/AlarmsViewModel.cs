@@ -133,21 +133,5 @@ namespace Timebox.MVVM.ViewModel
         }
 
         #endregion
-
-        #region Methods
-
-        //private void UpdateAlarms()
-        //{
-        //    // Останавливаю таймеры на текущих объектах будильников, чей статус IsEnabled = true (чтобы не сработали когда должны сработать таймеры на новых объектах будильников)
-        //    AlarmHelper.AlarmStop(Alarms);
-
-        //    // Получаю список таймеров из базы данных (Alarms теперь содержит новые объекты будильников (new Alarm))
-        //    Alarms = Database.GetAlarms();
-
-        //    // Запускаю таймеры на будильниках, у которых IsEnabled = true
-        //    AlarmHelper.AlarmStart(Alarms);
-        //} 
-
-        #endregion
     }
 }

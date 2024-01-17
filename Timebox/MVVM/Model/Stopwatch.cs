@@ -2,11 +2,6 @@
 {
     internal class Stopwatch
     {
-        public delegate void SecondsChangedHandler(object sender, StopwatchSecondsChangedEventArgs e);
-        public event SecondsChangedHandler? PassedSecondsChanged;
-
-        private void OnPassedSecondsChanged(StopwatchSecondsChangedEventArgs e) => PassedSecondsChanged?.Invoke(this, e);
-
         public Stopwatch()
         {
             _timer = new(1000);
@@ -14,11 +9,18 @@
             _timer.AutoReset = true;
         }
 
+        #region [Events]
+
+        public delegate void SecondsChangedHandler(object sender, StopwatchSecondsChangedEventArgs e);
+        public event SecondsChangedHandler? PassedSecondsChanged;
+
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             PassedSeconds++;
             OnPassedSecondsChanged(new StopwatchSecondsChangedEventArgs(PassedSeconds));
         }
+
+        #endregion
 
         #region [Properties]
 
@@ -26,6 +28,8 @@
         private int PassedSeconds { get; set; }
 
         #endregion
+
+        #region [Methods]
 
         public void Stop()
         {
@@ -48,5 +52,9 @@
             PassedSeconds = 0;
             OnPassedSecondsChanged(new StopwatchSecondsChangedEventArgs(PassedSeconds));
         }
+
+        private void OnPassedSecondsChanged(StopwatchSecondsChangedEventArgs e) => PassedSecondsChanged?.Invoke(this, e);
+
+        #endregion
     }
 }

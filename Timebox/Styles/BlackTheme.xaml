@@ -643,7 +643,7 @@
                             Height="250"
                             MaxWidth="384">
                         <Border.Background>
-                            <SolidColorBrush Color="#272727" x:Name="BorderBackground"/>
+                            <SolidColorBrush Color="#292929" x:Name="BorderBackground"/>
                         </Border.Background>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -700,8 +700,8 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="BorderBackground"
                                                     Storyboard.TargetProperty="Color"
-                                                    From="#272727"
-                                                    To="#292929"
+                                                    From="#292929"
+                                                    To="#272727"
                                                     Duration="0:0:0.1"/>
                                 </Storyboard>
                             </BeginStoryboard>
@@ -713,8 +713,8 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="BorderBackground"
                                                     Storyboard.TargetProperty="Color"
-                                                    From="#292929"
-                                                    To="#272727"
+                                                    From="#272727"
+                                                    To="#292929"
                                                     Duration="0:0:0.1"/>
                                 </Storyboard>
                             </BeginStoryboard>
@@ -1079,6 +1079,84 @@
                                                     Storyboard.TargetProperty="Color"
                                                     From="#343434"
                                                     To="#303030"
+                                                    Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    
+    <!--Clock Styles-->
+    
+    <!--list view item style-->
+    <Style TargetType="ListViewItem" x:Key="Clock">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="border"
+                            CornerRadius="5"
+                            Width="384"
+                            Height="65">
+                        <Border.Background>
+                            <SolidColorBrush Color="#292929" x:Name="BorderBackground"/>
+                        </Border.Background>
+
+                        <StackPanel Orientation="Horizontal">
+                            <bi:BootstrapIcon Icon="{Binding Icon}"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Foreground="White"
+                                              Width="20"
+                                              Margin="18,0,0,0"/>
+
+                            <TextBlock Text="{Binding Time}"
+                                       FontWeight="Bold"
+                                       FontSize="20"
+                                       Foreground="White"
+                                       VerticalAlignment="Center"
+                                       Margin="38,0,0,0"/>
+
+                            <StackPanel Margin="40,0,0,0"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="Local time"
+                                           FontSize="14"
+                                           Foreground="White"
+                                           Margin="0,0,0,5"/>
+
+                                <TextBlock Text="{Binding Date}"
+                                           FontSize="12.9"
+                                           Opacity="0.7"
+                                           Foreground="White"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+
+                        <EventTrigger RoutedEvent="Border.MouseEnter"
+                                      SourceName="border">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#292929"
+                                                    To="#272727"
+                                                    Duration="0:0:0.1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="Border.MouseLeave"
+                                      SourceName="border">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#272727"
+                                                    To="#292929"
                                                     Duration="0:0:0.1"/>
                                 </Storyboard>
                             </BeginStoryboard>
