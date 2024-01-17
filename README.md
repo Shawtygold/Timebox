@@ -16,10 +16,10 @@ Timebox current version:
 - Version - `1.0`
 
 ### 📖 Functional
-- Adding, editing, deleting alarms
-- Adding, editing, deleting hourglasses
-- Loading...
-- Loading...
+- Alarms
+- Hourglasses
+- Stopwatch
+- Clock
 
  ### 📜 Some notes
  This project supports:
