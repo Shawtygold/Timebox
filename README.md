@@ -33,7 +33,11 @@ Timebox current version:
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot1.jpg"/>
   <h3>Hourglasses</h3>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot2.jpg"/>
-   <h3>Notifications</h3>
+    <h3>Clock</h3>
+  <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot5.jpg"/>
+    <h3>Stopwatch</h3>
+  <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot6.jpg"/>
+    <h3>Notifications</h3>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot3.1.jpg"/>
   <img src="https://github.com/Shawtygold/Timebox/blob/master/Screenshot4.jpg" width="357"/>
 </div>
