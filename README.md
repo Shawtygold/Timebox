@@ -1,5 +1,5 @@
 ### :pencil: About this project
-- This project is an application that will help optimize your time and not let you forget about important tasks :)
+- This project is an application that will help optimize your time and not let you forget about important tasks.
 - This repository will be updated with new functionality over time :)
 - Created by [shawtygold](https://github.com/Shawtygold).
 
