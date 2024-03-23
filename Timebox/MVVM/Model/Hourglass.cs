@@ -1,8 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.DirectoryServices.ActiveDirectory;
 using System.Timers;
-using System.Windows;
 using System.Windows.Input;
 using Timebox.Core;
 
@@ -20,7 +18,7 @@ namespace Timebox.MVVM.Model
 
         #region [Non-database properties]
 
-        private System.Timers.Timer _timer;
+        private readonly System.Timers.Timer _timer;
         
         [NotMapped] private bool IsActive { get; set; } = false;
         [NotMapped] private int RemainingTime { get; set; } // (In seconds)

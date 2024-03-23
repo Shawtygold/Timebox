@@ -9,6 +9,7 @@
     <Grid>
         <ListView BorderThickness="0"
                   Background="Transparent"
+                  Focusable="False"
                   Margin="0,25,0,0"
                   ItemContainerStyle="{DynamicResource Clock}"
                   ItemsSource="{Binding Clock}"

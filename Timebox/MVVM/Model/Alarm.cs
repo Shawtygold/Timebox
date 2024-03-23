@@ -7,7 +7,7 @@ using Timebox.Core;
 
 namespace Timebox.MVVM.Model
 {
-    public class Alarm : ObservableObject
+    internal class Alarm : ObservableObject
     {
         #region [Database properties]
         
@@ -19,7 +19,7 @@ namespace Timebox.MVVM.Model
         public string SoundSource
         {
             get { return _soundSource; }
-            set { _soundSource = value; OnPropertyChanged(); }
+            private set { _soundSource = value; OnPropertyChanged(); }
         }
 
         private bool _isRepeat;
@@ -42,7 +42,6 @@ namespace Timebox.MVVM.Model
             get { return _removeAfterTriggering; }
             set { _removeAfterTriggering = value; OnPropertyChanged(); }
         }
-
 
         #endregion
 
@@ -147,7 +146,6 @@ namespace Timebox.MVVM.Model
         #endregion
 
         #region [Methods]
-
         private double GetIntervalInMillisecond()
         {
             DateTime triggerTime = new();
@@ -168,7 +166,7 @@ namespace Timebox.MVVM.Model
             {
                 StartTimer();
                 IsEnabled = true;
-                await AlarmDatabase.EditAlarm(this); //edit IsEnabled in the databse
+                await AlarmDatabase.EditAlarm(this); //edit IsEnabled field in the databse
             }
         }
         private async void Stop()
@@ -177,7 +175,7 @@ namespace Timebox.MVVM.Model
             {
                 StopTimer();
                 IsEnabled = false;
-                await AlarmDatabase.EditAlarm(this); //изменение поля IsEnabled в бд
+                await AlarmDatabase.EditAlarm(this); //edit IsEnabled field in the databse
             }
         }
         private void RestartTimer()

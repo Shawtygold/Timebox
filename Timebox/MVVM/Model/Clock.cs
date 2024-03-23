@@ -18,7 +18,7 @@
         #region [Events]
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
-        {
+        {        
             DateTime now = DateTime.Now;
             Time = now.ToShortTimeString();
             Icon = GetIconTimeOfDay(now);
@@ -28,7 +28,7 @@
 
         #region [Properties]
 
-        private System.Timers.Timer _timer;
+        private readonly System.Timers.Timer _timer;
 
         private string _icon;
         public string Icon
@@ -55,16 +55,14 @@
 
         #region [Methods]
 
-        private string GetIconTimeOfDay(DateTime dateTimeNow)
+        private static string GetIconTimeOfDay(DateTime dateTimeNow)
         {
             double hours = Math.Round(dateTimeNow.TimeOfDay.TotalHours, 0);
 
             if (hours < 18)
                 return "Sun";
-            else
-            {
-                return "Moon";
-            }
+
+            return "Moon";           
         }
 
         #endregion
